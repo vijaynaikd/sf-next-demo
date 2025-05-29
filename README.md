@@ -18,6 +18,7 @@ Setup >> Security Controls >> OAuth and OpenId Connect Settings >> Allow OAuth U
 
 6. Run project
 ```
+npm install
 npm run dev
 ```
 
