@@ -23,3 +23,5 @@ npm run dev
 ```
 
 7. Open http://localhost:3000/accounts
+
+8. To test with custom apex rest - create an apex class in your salesforce org, you can copy apex class here: 

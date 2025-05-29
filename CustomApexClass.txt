@@ -1,0 +1,68 @@
+@RestResource(urlMapping='/accountData/*')
+global with sharing class AccountDataController {
+    
+    @HttpGet
+    global static AccountWrapper getAccountData() {
+        RestRequest req = RestContext.request;
+        String accountId = req.requestURI.substring(req.requestURI.lastIndexOf('/') + 1);
+        
+        AccountWrapper wrapper = new AccountWrapper();
+
+        Account acc = [
+            SELECT Id, Name, Industry, Phone
+            FROM Account
+            WHERE Id = :accountId
+            LIMIT 1
+        ];
+        wrapper.account = acc;
+
+        wrapper.contacts = [
+            SELECT Id, FirstName, LastName, Email
+            FROM Contact
+            WHERE AccountId = :accountId
+        ];
+
+        wrapper.opportunities = [
+            SELECT Id, Name, StageName, CloseDate, Amount
+            FROM Opportunity
+            WHERE AccountId = :accountId
+        ];
+
+        return wrapper;
+    }
+
+    // 🔹 Sample POST to create an Account
+    @HttpPost
+    global static String createAccount() {
+        RestRequest req = RestContext.request;
+        String body = req.requestBody.toString();
+        Map<String, Object> data = (Map<String, Object>) JSON.deserializeUntyped(body);
+
+        Account acc = new Account();
+        acc.Name = (String)data.get('Name');
+        acc.Phone = (String)data.get('Phone');
+        acc.Website = (String)data.get('Website');
+
+        insert acc;
+        return acc.Id;
+    }
+
+    // 🔸 Sample DELETE to delete an Account by Id from URL
+    @HttpDelete
+    global static String deleteAccount() {
+        RestRequest req = RestContext.request;
+        String accountId = req.requestURI.substring(req.requestURI.lastIndexOf('/') + 1);
+
+        Account acc = [SELECT Id FROM Account WHERE Id = :accountId LIMIT 1];
+        delete acc;
+        
+        return 'Deleted Account with Id: ' + accountId;
+    }
+
+    // Wrapper to send back structured data
+    global class AccountWrapper {
+        public Account account;
+        public List<Contact> contacts;
+        public List<Opportunity> opportunities;
+    }
+}
