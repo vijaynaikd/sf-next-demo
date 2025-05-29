@@ -5,6 +5,8 @@ import './Accounts.css';
 export default function Accounts() {
   const [accounts, setAccounts] = useState([]);
   const [form, setForm] = useState({ Name: '', Phone: '', Website: '' });
+  const [accountDetails, setAccountDetails] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchAccounts();
@@ -29,6 +31,22 @@ export default function Accounts() {
   const handleDelete = async (id) => {
     await axios.delete(`/api/accounts/${id}`);
     fetchAccounts();
+  };
+
+  const fetchAccountDetails = async (accountId) => {
+    try {
+      const res = await fetch(`/api/accountData/${accountId}`);
+      const data = await res.json();
+      setAccountDetails(data);
+      setShowModal(true); // 👈 show the modal
+    } catch (err) {
+      console.error("Failed to fetch account details", err);
+    }
+  };
+  
+  const closeModal = () => {
+    setShowModal(false);
+    setAccountDetails(null);
   };
 
   return (
@@ -68,7 +86,8 @@ export default function Accounts() {
               <th>Name</th>
               <th>Phone</th>
               <th>Website</th>
-              <th>Actions</th>
+              <th>Delete</th>
+              <th>View</th>
             </tr>
           </thead>
           <tbody>
@@ -103,6 +122,11 @@ export default function Accounts() {
                     Delete
                   </button>
                 </td>
+                <td>
+                  <button className="view-button" onClick={() => fetchAccountDetails(acc.Id)}>
+                    View Details
+                  </button>
+                  </td>
               </tr>
             ))}
             {accounts.length === 0 && (
@@ -114,6 +138,31 @@ export default function Accounts() {
             )}
           </tbody>
         </table>
+
+        {showModal && accountDetails && (
+          <div className="modal-overlay">
+            <div className="modal">
+              <button className="modal-close" onClick={closeModal}>×</button>
+              <h2>Account: {accountDetails.account.Name}</h2>
+              <p>Industry: {accountDetails.account.Industry}</p>
+              <p>Phone: {accountDetails.account.Phone}</p>
+
+              <h3>Contacts</h3>
+              <ul>
+                {accountDetails.contacts.map(contact => (
+                  <li key={contact.Id}>{contact.FirstName} {contact.LastName} - {contact.Email}</li>
+                ))}
+              </ul>
+
+              <h3>Opportunities</h3>
+              <ul>
+                {accountDetails.opportunities.map(oppty => (
+                  <li key={oppty.Id}>{oppty.Name} - {oppty.StageName} - ${oppty.Amount}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

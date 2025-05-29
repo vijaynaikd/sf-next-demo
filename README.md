@@ -16,7 +16,7 @@ SF_LOGIN_URL=https://login.salesforce.com
 5. In Salesforce peform the following steps to allow username password flow
 Setup >> Security Controls >> OAuth and OpenId Connect Settings >> Allow OAuth Username-Password Flow
 
-6. Run project
+6. Install Dependencies & Run project
 ```
 npm install
 npm run dev
