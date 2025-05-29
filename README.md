@@ -17,6 +17,8 @@ SF_LOGIN_URL=https://login.salesforce.com
 Setup >> Security Controls >> OAuth and OpenId Connect Settings >> Allow OAuth Username-Password Flow
 
 6. Run project
+```
 npm run dev
+```
 
-7. Open localhost:3000/accounts
+7. Open http://localhost:3000/accounts
