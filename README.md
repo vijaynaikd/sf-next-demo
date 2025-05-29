@@ -24,4 +24,4 @@ npm run dev
 
 7. Open http://localhost:3000/accounts
 
-8. To test with custom apex rest - create an apex class in your salesforce org, you can copy apex class here: https://github.com/vijaynaikd/sf-next-demo/blob/main/CustomApexClass.txt
+8. To test with custom apex rest for view details button you need to create an apex class - create an apex class in your salesforce org, you can copy apex class here: https://github.com/vijaynaikd/sf-next-demo/blob/main/CustomApexClass.txt
